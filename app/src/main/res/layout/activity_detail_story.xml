@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.DetailStory.DetailStoryActivity">
+
+    <ImageView
+        android:id="@+id/imgstry"
+        android:layout_width="328dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="70dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/icon_image" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Name user"
+        android:textSize="15dp"
+        app:layout_constraintStart_toStartOf="@+id/imgstry"
+        app:layout_constraintTop_toBottomOf="@+id/imgstry" />
+
+    <TextView
+        android:id="@+id/tv_desk"
+        android:layout_width="325dp"
+        android:layout_height="420dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/imgstry"
+        app:layout_constraintStart_toStartOf="@+id/tv_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.AddStoryActivity">
+
+    <ImageView
+        android:id="@+id/imgUpload"
+        android:layout_width="242dp"
+        android:layout_height="179dp"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/icon_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="camera"
+        app:layout_constraintStart_toStartOf="@+id/imgUpload"
+        app:layout_constraintTop_toBottomOf="@+id/imgUpload" />
+
+    <Button
+        android:id="@+id/bntGlry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Galery"
+        app:layout_constraintEnd_toEndOf="@+id/imgUpload"
+        app:layout_constraintTop_toBottomOf="@+id/imgUpload" />
+
+    <EditText
+        android:id="@+id/text_area"
+        android:hint="Deskripsi"
+        android:textSize="10dp"
+        android:layout_width="243dp"
+        android:layout_height="139dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="104dp"
+        android:padding="10dp"
+        android:gravity="top|left"
+        android:inputType="text|textMultiLine"
+        android:background="@drawable/border_edit_text"
+        app:layout_constraintEnd_toEndOf="@+id/bntGlry"
+        app:layout_constraintStart_toStartOf="@+id/btnCamera"
+        app:layout_constraintTop_toBottomOf="@+id/imgUpload"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/upload"
+        android:layout_width="238dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="24dp"
+        android:text="upload"
+        app:layout_constraintEnd_toEndOf="@+id/text_area"
+        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintStart_toStartOf="@+id/text_area"
+        app:layout_constraintTop_toBottomOf="@+id/text_area" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
