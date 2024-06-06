@@ -1,9 +1,6 @@
 package com.example.appstory.Data.Retrofit
 
-import androidx.lifecycle.LiveData
-import com.bumptech.glide.annotation.GlideType
 import com.example.appstory.Data.Retrofit.response.FileResponse
-import com.example.appstory.Data.Retrofit.response.ListStoryItem
 import com.example.appstory.Data.Retrofit.response.ResponseDetail
 import com.example.appstory.Data.Retrofit.response.ResponseGetStory
 import com.example.appstory.Data.Retrofit.response.ResponseLogin
@@ -14,13 +11,10 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
-import java.io.File
-import java.security.Provider.Service
 
 interface UploadService {
     @Multipart
@@ -29,7 +23,7 @@ interface UploadService {
         @Header("Authorization")token: String?,
         @Part photo: MultipartBody.Part,
         @Part("description") description: RequestBody,
-        ): Call<FileResponse>
+        ): FileResponse
 }
 
 interface RegisterService{

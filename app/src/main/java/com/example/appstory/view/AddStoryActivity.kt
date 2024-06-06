@@ -1,29 +1,28 @@
 package com.example.appstory.view
 
-import android.content.ContentValues
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
 import com.example.appstory.Data.Retrofit.ApiConfig
 import com.example.appstory.Data.Retrofit.response.FileResponse
 import com.example.appstory.databinding.ActivityAddStoryBinding
 import com.example.appstory.view.listStory.ListStoryActivity
-import kotlinx.coroutines.CoroutineScope
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import retrofit2.HttpException
 
 class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddStoryBinding
@@ -44,10 +43,6 @@ class AddStoryActivity : AppCompatActivity() {
 
 
             insertDb("Bearer $token",desk)
-
-
-            startActivity(Intent(this, ListStoryActivity::class.java))
-            finish()
 
         }
     }
@@ -99,32 +94,20 @@ class AddStoryActivity : AppCompatActivity() {
             )
             val deskRequestBody = deskirpsi.toRequestBody("text/plain".toMediaType())
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val client = ApiConfig.uploadService().uploadImage(token, img, deskRequestBody)
-            client.enqueue(object : Callback<FileResponse> {
-                override fun onResponse(
-                    call: Call<FileResponse>,
-                    response: Response<FileResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        val responseBody = response.body()
-                        if (responseBody != null) {
-                            if (responseBody.error == false) {
-                                Log.e(ContentValues.TAG, "berhasil: ${responseBody.error}")
-                            }
-                        }
-                    } else {
-                        Log.e(ContentValues.TAG, "gagal: ${response.message()}")
-                        Toast.makeText(this@AddStoryActivity, "upload gagal", Toast.LENGTH_SHORT)
-                            .show()
-                    }
+        lifecycleScope.launch {
+            try {
+                val apiService = ApiConfig.uploadService()
+                val successResponse = apiService.uploadImage(token,img,deskRequestBody)
+                Log.d(TAG, "upload berhasil: ${successResponse.message}")
+                withContext(Dispatchers.Main){
+                    startActivity(Intent(this@AddStoryActivity, ListStoryActivity::class.java))
+                    finish()
                 }
-
-                override fun onFailure(call: Call<FileResponse>, t: Throwable) {
-                    Log.e(ContentValues.TAG, "onFailure: ${t.message}")
-                }
-
-            })
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
+                val errorResponse = Gson().fromJson(errorBody, FileResponse::class.java)
+                Log.d(TAG, "upload gagal: ${errorResponse.message}")
+            }
         }
     }
 
