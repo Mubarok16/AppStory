@@ -6,6 +6,8 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -13,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.appstory.Data.Retrofit.ApiConfig
 import com.example.appstory.Data.Retrofit.response.ResponseLogin
 import com.example.appstory.databinding.ActivityMainBinding
+import com.example.appstory.view.customeView.CustomeViewPass
 import com.example.appstory.view.listStory.ListStoryActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,16 +37,39 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        setMyButtonEnable()
+        btnLogin()
+//        binding.btnlogin.setOnClickListener {
+//            val email = binding.etem.text.toString()
+//            val pw = binding.etpw.text.toString()
+//            if (email.isNotEmpty()){
+//                login(email,pw)
+//            }else{
+//                Toast.makeText(this, "isi email dan password $pw", Toast.LENGTH_SHORT).show()
+//            }
+//
+//        }
+    }
+
+    fun btnLogin(){
+        binding.etpw.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                setMyButtonEnable()
+            }
+            override fun afterTextChanged(s: Editable) {
+            }
+        })
         binding.btnlogin.setOnClickListener {
             val email = binding.etem.text.toString()
             val pw = binding.etpw.text.toString()
-            if (email.isNotEmpty()){
-                login(email,pw)
-            }else{
-                Toast.makeText(this, "isi email dan password $pw", Toast.LENGTH_SHORT).show()
-            }
-
+            login(email,pw)
         }
+    }
+    private fun setMyButtonEnable() {
+        val result = binding.etpw.text
+        binding.btnlogin.isEnabled = result != null && result.toString().isNotEmpty() && result.length >= 8
     }
 
     override fun onStart() {
@@ -59,7 +85,6 @@ class MainActivity : AppCompatActivity() {
     fun login(eml:String, pw:String){
         val sharedPreferences = getSharedPreferences("my_account", Context.MODE_PRIVATE)
 
-        if (pw.length > 8 ){
             showLoading(true)
             val client = ApiConfig.loginService().login(eml,pw)
             client.enqueue(object : Callback<ResponseLogin> {
@@ -93,7 +118,6 @@ class MainActivity : AppCompatActivity() {
                     Log.e(TAG, "onFailure: ${t.message}")
                 }
             })
-        }
     }
 
     fun pindahActivity(){
