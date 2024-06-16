@@ -1,11 +1,24 @@
 package com.example.appstory.Data.Retrofit.response
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-data class ResponseGetStory(
+@Entity(tableName = "story")
+data class ListStoryItem(
+	@PrimaryKey @field:SerializedName("id") val id: String,
+	val createdAt: String,
+	val description: String,
+	val lat: Double,
+	val lon: Double,
+	val name: String,
+	val photoUrl: String
+)
 
+data class ResponseGetStory(
+// = emptyList()
 	@field:SerializedName("listStory")
-	val listStory: List<ListStoryItem> = emptyList(),
+	val listStory: List<ListStory>,
 
 	@field:SerializedName("error")
 	val error: Boolean? = null,
@@ -14,7 +27,8 @@ data class ResponseGetStory(
 	val message: String? = null
 )
 
-data class ListStoryItem(
+
+data class ListStory(
 
 	@field:SerializedName("photoUrl")
 	val photoUrl: String? = null,
@@ -29,11 +43,11 @@ data class ListStoryItem(
 	val description: String? = null,
 
 	@field:SerializedName("lon")
-	val lon: Any? = null,
+	val lon: String? = null,
 
 	@field:SerializedName("id")
-	val id: String? = null,
+	val id: String,
 
 	@field:SerializedName("lat")
-	val lat: Any? = null
+	val lat: String? = null
 )

@@ -40,6 +40,18 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/logout" />
 
+        <ImageButton
+            android:id="@+id/btnMap"
+            android:layout_width="30dp"
+            android:layout_height="27dp"
+            android:layout_marginEnd="30dp"
+            android:background="@color/logout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnLogout"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/icon_map"
+            tools:ignore="MissingConstraints" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

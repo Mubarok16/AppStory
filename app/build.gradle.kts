@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("kotlin-parcelize")
     id("kotlin-kapt")
+    alias(libs.plugins.googleAndroidLibrariesMapsplatformSecretsGradlePlugin)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -49,6 +51,10 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.retrofit)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.play.services.maps)
+    implementation(libs.androidx.paging.common.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -80,5 +86,15 @@ dependencies {
     implementation("androidx.core:core-ktx:1.8.0")
 
     implementation ("com.google.code.gson:gson:2.10.1")
+
+//  paging 3
+//    implementation ("androidx.paging:paging:3.1.1")
+    implementation ("androidx.paging:paging-runtime-ktx:3.1.1")
+
+    implementation ("androidx.room:room-paging:2.5.1")
+    implementation ("androidx.room:room-ktx:2.5.1")
+    kapt ("androidx.room:room-compiler:2.5.1")
+
+
 
 }
