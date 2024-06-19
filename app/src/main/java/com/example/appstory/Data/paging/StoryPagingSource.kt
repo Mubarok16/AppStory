@@ -21,7 +21,7 @@ import retrofit2.Response
 
 
 class StoryPagingSource(private val apiService: getAllStoryService) : PagingSource<Int, ListStoryItem>() {
-    lateinit var responseData: List<ListStoryItem>
+
     private companion object {
         const val INITIAL_PAGE_INDEX = 1
     }
@@ -37,36 +37,14 @@ class StoryPagingSource(private val apiService: getAllStoryService) : PagingSour
 
         return try {
             val page = params.key ?: INITIAL_PAGE_INDEX
-            CoroutineScope(Dispatchers.IO).launch {
-                val client = apiService.getAllStoryService(page,params.loadSize)
-                client.enqueue(object : Callback<ResponseStoryList> {
-                    override fun onResponse(
-                        call: Call<ResponseStoryList>,
-                        response: Response<ResponseStoryList>
-                    ) {
-                        if (response.isSuccessful) {
-                            val responseBody = response.body()
-                            if (responseBody != null) {
-                                if (responseBody.error == false ){
-                                    val dataList = responseBody.listStory
-                                    responseData = dataList
-                                }
-                            }
-                        } else {
-                            Log.e(ContentValues.TAG, "gagal: ${response.message()}")
-                        }
-                    }
-
-                    override fun onFailure(call: Call<ResponseStoryList>, t: Throwable) {
-                        Log.e(ContentValues.TAG, "onFailure: ${t.message}")
-                    }
-                })
-            }
-//            responseData = apiService.getAllStoryService(page,params.loadSize)
+//            CoroutineScope(Dispatchers.IO).launch {
+//
+//            }
+            val responseData = apiService.getAllStoryService(page,params.loadSize)
             LoadResult.Page(
-                data = responseData,
+                data = responseData.listStory,
                 prevKey = if (page == 1) null else page - 1,
-                nextKey = if (responseData.isNullOrEmpty()) null else page + 1
+                nextKey = if (responseData.listStory.isNullOrEmpty()) null else page + 1
             )
         } catch (exception: Exception) {
             return LoadResult.Error(exception)

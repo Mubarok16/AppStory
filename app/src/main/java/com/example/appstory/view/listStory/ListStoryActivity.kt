@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appstory.Data.Retrofit.ApiConfig
+import com.example.appstory.Data.Retrofit.response.ListStoryItem
 import com.example.appstory.adapter.ListStoryAdapter
 import com.example.appstory.adapter.LoadingStateAdapter
 import com.example.appstory.adapter.StoryAdapter
@@ -80,6 +81,14 @@ class ListStoryActivity : AppCompatActivity() {
         )
         StoryViewModel.quote.observe(this, {
             adapter.submitData(lifecycle, it)
+        })
+
+        adapter.setOnItemClickCallback(object : StoryAdapter.OnItemClickCallBack{
+            override fun onItemClicked(data: ListStoryItem) {
+                val detailAct = Intent(this@ListStoryActivity, DetailStoryActivity::class.java)
+                detailAct.putExtra("id","${data.id}")
+                startActivity(detailAct)
+            }
         })
 
     }

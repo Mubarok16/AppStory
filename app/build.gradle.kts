@@ -41,6 +41,9 @@ android {
         viewBinding = true
         buildConfig = true
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -95,6 +98,13 @@ dependencies {
     implementation ("androidx.room:room-ktx:2.5.1")
     kapt ("androidx.room:room-compiler:2.5.1")
 
+// testing
+    androidTestImplementation ("androidx.test:core:1.3.0") // InstantTaskExecutorRule
+    androidTestImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1") // TestDispatcher
+    testImplementation ("androidx.arch.core:core-testing:2.1.0") // InstantTaskExecutorRule
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1") // TestDispatcher
+    testImplementation ("org.mockito:mockito-core:3.11.2")
+    testImplementation ("org.mockito:mockito-inline:3.11.2")
 
 
 }

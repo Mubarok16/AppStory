@@ -16,8 +16,18 @@ import com.example.appstory.databinding.ListStoryRecycleviewBinding
 
 class StoryAdapter: PagingDataAdapter<ListStoryItem, StoryAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
+    private lateinit var onItemClickCallback: OnItemClickCallBack
+
+    interface OnItemClickCallBack {
+        fun onItemClicked(data: ListStoryItem)
+    }
+
+    fun setOnItemClickCallback(onItemClickCallback: StoryAdapter.OnItemClickCallBack) {
+        this.onItemClickCallback = onItemClickCallback
+    }
+
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ListStoryItem>() {
             override fun areItemsTheSame(oldItem: ListStoryItem, newItem: ListStoryItem): Boolean {
                 return oldItem == newItem
             }
@@ -45,6 +55,7 @@ class StoryAdapter: PagingDataAdapter<ListStoryItem, StoryAdapter.MyViewHolder>(
         val data = getItem(position)
         if (data != null) {
             holder.bind(data)
+            holder.itemView.setOnClickListener { onItemClickCallback.onItemClicked(data) }
         }
     }
 

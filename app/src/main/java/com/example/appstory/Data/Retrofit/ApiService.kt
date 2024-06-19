@@ -51,7 +51,7 @@ interface LoginService{
 }
 
 interface getStoryService{
-    @GET("stories")
+    @GET("stories?location=1")
     fun getStoryService(
         @Header("Authorization") token: String
     ): Call<ResponseGetStory>
@@ -68,10 +68,10 @@ interface getDetailService{
 // differen config
 interface getAllStoryService{
     @GET("stories")
-    fun getAllStoryService(
+    suspend fun getAllStoryService(
         @Query("page") page: Int,
         @Query("size") size: Int
-    ): Call<ResponseStoryList>
+    ): ResponseStoryList
 }
 
 
