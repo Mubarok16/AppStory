@@ -11,9 +11,6 @@ import com.example.appstory.Data.Retrofit.response.ListStoryItem
 import com.example.appstory.R
 import com.example.appstory.databinding.ListStoryRecycleviewBinding
 
-
-
-
 class ListStoryAdapter(private val listStory: List<ListStoryItem>): RecyclerView.Adapter<ListStoryAdapter.ListStoryHolder>(){
     private lateinit var onItemClickCallback: OnItemClickCallBack
 

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -12,27 +13,36 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appstory.Data.Retrofit.ApiConfig
 import com.example.appstory.Data.Retrofit.response.ListStoryItem
 import com.example.appstory.adapter.ListStoryAdapter
+import com.example.appstory.adapter.LoadingStateAdapter
+import com.example.appstory.adapter.StoryAdapter
 import com.example.appstory.databinding.ActivityListStoryBinding
 import com.example.appstory.factory.ListStoryViewModelFactory
 import com.example.appstory.view.AddStoryActivity
 import com.example.appstory.view.DetailStory.DetailStoryActivity
 import com.example.appstory.view.MainActivity
+import com.example.appstory.view.MapsActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ListStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityListStoryBinding
-    private lateinit var viewModel: ListStoryViewModel
+    private val StoryViewModel: ListStoryViewModel by viewModels {
+        ListStoryViewModelFactory(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListStoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sharedPreferences = getSharedPreferences("my_account", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("my_account", MODE_PRIVATE)
 
         setbtnaddstory()
+        setPindahMap()
         settvname(sharedPreferences)
         setLogout(sharedPreferences)
-        getDatabaseListStory(sharedPreferences)
+        getData()
     }
 
     fun setbtnaddstory(){
@@ -55,35 +65,38 @@ class ListStoryActivity : AppCompatActivity() {
         }
     }
 
-    fun getDatabaseListStory( sharedPreferences: SharedPreferences){
-        showLoading(true)
-        val token =  sharedPreferences.getString("token", "unknown")
-
-            viewModel = ViewModelProvider(this,(ListStoryViewModelFactory(ApiConfig.getStory())))[ListStoryViewModel::class.java]
-            viewModel.getListStory("Bearer $token")
-            viewModel.story.observe(this) { stories ->
-                setRecycleView(stories)
-                showLoading(false)
-            }
-    }
-
-    fun setRecycleView(Story: List<ListStoryItem>){
-
+    private fun getData() {
+        binding.rvStory.layoutManager = LinearLayoutManager(this)
         val layoutManager = LinearLayoutManager(this)
-        binding.rvStory.layoutManager = layoutManager
         val itemDecoration = DividerItemDecoration(this, layoutManager.orientation)
         binding.rvStory.addItemDecoration(itemDecoration)
 
-        val adapter = ListStoryAdapter(Story)
+        val adapter = StoryAdapter()
         binding.rvStory.adapter = adapter
 
-        adapter.setOnItemClickCallback(object :ListStoryAdapter.OnItemClickCallBack{
+        binding.rvStory.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
+        StoryViewModel.quote.observe(this, {
+            adapter.submitData(lifecycle, it)
+        })
+
+        adapter.setOnItemClickCallback(object : StoryAdapter.OnItemClickCallBack{
             override fun onItemClicked(data: ListStoryItem) {
-                val intent = Intent(this@ListStoryActivity, DetailStoryActivity::class.java)
-                intent.putExtra("id","${data.id}")
-                startActivity(intent)
+                val detailAct = Intent(this@ListStoryActivity, DetailStoryActivity::class.java)
+                detailAct.putExtra("id","${data.id}")
+                startActivity(detailAct)
             }
         })
+
+    }
+
+    private fun setPindahMap(){
+        binding.btnMap.setOnClickListener {
+            startActivity(Intent(this,MapsActivity::class.java))
+        }
     }
 
     private fun showLoading(isLoading: Boolean) {

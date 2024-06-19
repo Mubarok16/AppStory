@@ -1,5 +1,10 @@
 package com.example.appstory.Data.Retrofit
 
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import com.example.appstory.view.MapsActivity
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -41,5 +46,31 @@ class ApiConfig{
         fun getDetailService(): getDetailService{
             return instanceRetrofit().create(getDetailService::class.java)
         }
+
+        fun getAllStory(): getAllStoryService{
+            return instanceRetrofit().create(getAllStoryService::class.java)
+        }
     }
+}
+
+class RetrofitBuilder(private val dataStore: SharedPreferences) {
+
+    private fun getRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://story-api.dicoding.dev/v1/")
+            .client(
+                OkHttpClient.Builder()
+                    .addInterceptor(
+                        HttpLoggingInterceptor()
+                            .setLevel(HttpLoggingInterceptor.Level.BODY)
+                    )
+                    .addInterceptor(AuthInterceptor(dataStore))
+                    .build()
+            )
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    val apiServiceAllStory: getAllStoryService = getRetrofit().create(getAllStoryService::class.java)
+
 }
